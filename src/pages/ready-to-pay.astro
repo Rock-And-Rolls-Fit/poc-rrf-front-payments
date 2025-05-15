@@ -1,0 +1,179 @@
+---
+import { v4 as uuidv4 } from "uuid";
+import Layout from "@/layouts/Layout.astro";
+import { banks, routes } from "@/constants";
+import { Button } from "@/components/ui/button";
+import BankCard from "@/components/BankCard.astro";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { BankCodeSecurity } from "@/components/BankCodeSecurity";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Banknote } from "@lucide/astro";
+
+export const prerender = false;
+
+let token;
+let price;
+let userId;
+let productName;
+let description;
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  userId = formData.get("userId") as string;
+  price = formData.get("price") as string;
+  productName = formData.get("productName") as string;
+  description = formData.get("description") as string;
+
+  const response = await fetch(routes.CREATE_LINK, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      buyOrder: uuidv4(),
+      amount: price,
+      sessionId: userId,
+      callbackUrl: "http://localhost:3000/payment/callback",
+    }),
+  });
+
+  if (response.ok) {
+    const { link } = await response.json();
+    token = link.token;
+  }
+} else {
+  return Astro.redirect("/");
+}
+---
+
+<Layout title="Ready to pay">
+  <h1 class="text-center text-3xl font-bold my-16">Ready to pay?</h1>
+  <form class="grid grid-cols-2 gap-4 px-12">
+    <div class="flex flex-col gap-4 pb-16">
+      <p class="text-xl">Please select your bank</p>
+      <input type="hidden" name="token" value={token} />
+      <input type="hidden" name="userId" value={userId} />
+      <input type="hidden" name="price" value={price} />
+      <div class="h-80 overflow-auto">
+        <div class="grid grid-cols-3 gap-4 p-1.5">
+          {
+            banks.map((bank) => (
+              <BankCard id={bank.code} value={bank.code} name={bank.name} />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    <div class="space-y-4 px-12">
+      <p class="text-xl">Payment Details</p>
+      <Card>
+        <CardContent className="flex flex-col gap-4">
+          <div class="flex flex-col gap-2">
+            <h2 class="text-xl font-bold">{productName}</h2>
+            <p class="text-sm text-gray-500">{description}</p>
+          </div>
+          <span class="font-bold">Amount: ${price}</span>
+          <hr />
+          <div class="flex flex-col gap-2">
+            <Label>Bank Code</Label>
+            <div class="flex flex-row justify-center">
+              <BankCodeSecurity client:visible />
+            </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <Label>Phone Number</Label>
+            <Input
+              type="tel"
+              placeholder="Phone Number"
+              name="phoneNumber"
+              required
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <Label>Tax Document Id</Label>
+            <Input
+              type="text"
+              placeholder="V012340163"
+              name="taxDocument"
+              required
+            />
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full"><Banknote /> Pay</Button>
+        </CardFooter>
+      </Card>
+    </div>
+  </form>
+</Layout>
+
+<script>
+  import { routes } from "@/constants";
+  const TAX_DOCUMENT_REGEXP = /^[VE]\d{7,9}$/;
+  const form = document.querySelector("form") as HTMLFormElement;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    // Get the form data
+    const formData = new FormData(form);
+
+    // Get hidden input values
+    const token = formData.get("token") as string;
+    const userId = formData.get("userId") as string;
+    const price = formData.get("price") as string;
+
+    // Get selected bank
+    const selectedBank = document.querySelector(
+      'input[name="bank"]:checked'
+    ) as HTMLInputElement;
+    const bankCode = selectedBank ? selectedBank.value : null;
+    const phoneNumber = formData.get("phoneNumber") as string;
+    const bankCodeSecurity = formData.get("bankCodeSecurity") as string;
+    const taxDocument = formData.get("taxDocument") as string;
+    console.log(taxDocument);
+
+    if (!bankCode) {
+      alert("Please select a bank");
+      return;
+    }
+
+    const upperValue = taxDocument.toUpperCase();
+
+    if (!taxDocument) {
+      alert("Please enter a tax document id");
+      return;
+    }
+
+    if (upperValue.length <= 10) {
+      if (TAX_DOCUMENT_REGEXP.test(upperValue)) {
+        console.log("Válido:", upperValue);
+      } else {
+        alert("Tax Document Id is invalid");
+        return;
+      }
+    }
+    const result = await fetch(routes.SEND_PAYMENT_BUTTON_PAY, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        taxDocumentId: taxDocument,
+        phoneNumber,
+        bankCode,
+        token: bankCodeSecurity,
+        amount: price,
+      }),
+    });
+
+    if (!result.ok) {
+      alert("Something went wrong");
+      return;
+    }
+
+    alert("Payment Successful");
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 3000);
+  });
+</script>

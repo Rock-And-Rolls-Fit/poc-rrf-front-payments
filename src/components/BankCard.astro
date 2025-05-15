@@ -1,0 +1,25 @@
+---
+import { Card, CardContent } from "./ui/card";
+
+interface Props {
+  id: string;
+  value: string;
+  name: string;
+}
+
+const { id, value, name } = Astro.props;
+---
+
+<label
+  for={id}
+  class="cursor-pointer *:hover:border-gray-300 *:hover:bg-gray-200 *:transition-colors hover:scale-105 transition-transform"
+>
+  <Card className="flex flex-row gap-2 h-32">
+    <CardContent className="h-full">
+      <div class="flex flex-row justify-center items-center gap-4 h-full">
+        <input type="radio" id={id} value={value} name="bank" />
+        <img src={`/images/bank/${value}.webp`} alt={name} class="h-full" />
+      </div>
+    </CardContent>
+  </Card>
+</label>

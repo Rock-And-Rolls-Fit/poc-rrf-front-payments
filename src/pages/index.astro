@@ -1,0 +1,61 @@
+---
+import Product from "@/components/Product.astro";
+import type { AliExpressProduct } from "@/interfaces";
+import Layout from "@/layouts/Layout.astro";
+import { v4 as uuidv4 } from "uuid";
+
+const userId = uuidv4();
+
+interface IProducts {
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+}
+
+let products: IProducts[] = [];
+
+const API_URL = import.meta.env.API_ARTICLES;
+const API_KEY = import.meta.env.RAPID_API_KEY;
+const API_HOST = import.meta.env.RAPID_API_HOST;
+
+const response = await fetch(
+  `${API_URL}/hot_products?cat_id=15&sort=LAST_VOLUME_DESC&target_currency=USD&target_language=EN&page=1`,
+  {
+    method: "GET",
+    headers: {
+      "X-RapidAPI-Key": API_KEY,
+      "X-RapidAPI-Host": API_HOST,
+    },
+  }
+);
+
+if (response.ok) {
+  const results = await response.json();
+  products = results.map((product: AliExpressProduct) => ({
+    title: product.shop_name,
+    description: product.product_title,
+    image: product.product_main_image_url,
+    price: product.target_original_price,
+  }));
+}
+---
+
+<Layout>
+  <h1 class="text-3xl font-bold mt-10 text-center">List of Products</h1>
+  <div class="flex flex-col gap-4 p-12 justify-center items-center">
+    <div class="grid grid-cols-2 gap-4 w-3/4">
+      {
+        products.map((product) => (
+          <Product
+            title={product.title}
+            description={product.description}
+            image={product.image}
+            price={product.price}
+            userId={userId}
+          />
+        ))
+      }
+    </div>
+  </div>
+</Layout>

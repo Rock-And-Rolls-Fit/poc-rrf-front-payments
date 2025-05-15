@@ -1,0 +1,38 @@
+---
+import { Button } from "./ui/button";
+import { Card, CardContent, CardFooter } from "./ui/card";
+
+interface Props {
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+  userId: string;
+}
+
+const { title, description, image, price, userId } = Astro.props;
+---
+
+<form
+  method="post"
+  action="/ready-to-pay"
+  enctype="application/x-www-form-urlencoded"
+>
+  <Card>
+    <CardContent className="flex flex-row gap-4">
+      <img src={image} alt={title} class="w-16 h-16 rounded-full" />
+      <div>
+        <h2 class="text-xl font-semibold">{title}</h2>
+        <p class="text-sm text-gray-500">{description}</p>
+      </div>
+      <input type="hidden" name="userId" value={userId} />
+      <input type="hidden" name="price" value={price} />
+      <input type="hidden" name="productName" value={title} />
+      <input type="hidden" name="description" value={description} />
+    </CardContent>
+    <CardFooter className="flex items-center justify-end gap-4">
+      <p class="text-2xl font-semibold">${price}</p>
+      <Button variant="default" type="submit">Buy Now</Button>
+    </CardFooter>
+  </Card>
+</form>
