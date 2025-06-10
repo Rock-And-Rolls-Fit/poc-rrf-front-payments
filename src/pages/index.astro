@@ -1,6 +1,7 @@
 ---
 import Product from "@/components/Product.astro";
 import Layout from "@/layouts/Layout.astro";
+import { Image } from "astro:assets";
 import { v4 as uuidv4 } from "uuid";
 
 const userId = uuidv4();
@@ -47,10 +48,13 @@ const products: IProducts[] = [
 <Layout>
   <div class="bg-white py-10 space-y-4">
     <div class="flex justify-center items-center">
-      <img
+      <Image
         src="https://www.rockandrollsfit.com/wp-content/uploads/2025/02/cropped-logo-rockweb-01.png"
         alt="Success"
         class="w-40 h-auto"
+        inferSize
+        loading="eager"
+        
       />
     </div>
     <h1 class="text-6xl font-bold text-center uppercase">Plans</h1>

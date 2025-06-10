@@ -1,13 +1,18 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { Image } from "astro:assets";
 ---
 
 <Layout>
-  <div class="bg-white py-10 space-y-4 flex flex-col gap-4 justify-center items-center">
-    <img
+  <div
+    class="bg-white py-10 space-y-4 flex flex-col gap-4 justify-center items-center"
+  >
+    <Image
       src="https://www.rockandrollsfit.com/wp-content/uploads/2025/02/cropped-logo-rockweb-01.png"
       alt="Success"
       class="w-40 h-auto"
+      inferSize
+      loading="eager"
     />
     <h1 class="text-center text-3xl font-bold">Success!</h1>
   </div>

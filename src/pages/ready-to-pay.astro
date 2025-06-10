@@ -9,6 +9,7 @@ import { BankCodeSecurity } from "@/components/BankCodeSecurity";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Banknote } from "@lucide/astro";
+import { Image } from "astro:assets";
 
 export const prerender = false;
 
@@ -50,10 +51,12 @@ if (Astro.request.method === "POST") {
 <Layout title="Ready to pay">
   <div class="bg-white py-10 space-y-4">
     <div class="flex justify-center items-center">
-      <img
+      <Image
         src="https://www.rockandrollsfit.com/wp-content/uploads/2025/02/cropped-logo-rockweb-01.png"
         alt="Success"
         class="w-40 h-auto"
+        inferSize
+        loading="eager"
       />
     </div>
     <h1 class="text-center text-3xl font-bold">Ready to pay?</h1>
@@ -176,13 +179,10 @@ if (Astro.request.method === "POST") {
     });
 
     if (!result.ok) {
-      alert("Something went wrong");
+      window.location.href = "/transaction-failed";
       return;
     }
 
-    alert("Payment Successful");
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 3000);
+    window.location.href = "/success";
   });
 </script>
