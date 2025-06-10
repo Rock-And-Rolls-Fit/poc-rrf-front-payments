@@ -48,15 +48,24 @@ if (Astro.request.method === "POST") {
 ---
 
 <Layout title="Ready to pay">
-  <h1 class="text-center text-3xl font-bold my-16">Ready to pay?</h1>
-  <form class="grid grid-cols-2 gap-4 px-12">
-    <div class="flex flex-col gap-4 pb-16">
-      <p class="text-xl">Please select your bank</p>
+  <div class="bg-white py-10 space-y-4">
+    <div class="flex justify-center items-center">
+      <img
+        src="https://www.rockandrollsfit.com/wp-content/uploads/2025/02/cropped-logo-rockweb-01.png"
+        alt="Success"
+        class="w-40 h-auto"
+      />
+    </div>
+    <h1 class="text-center text-3xl font-bold">Ready to pay?</h1>
+  </div>
+  <form class="grid md:grid-cols-2 gap-4 md:px-12 bg-[#F37622] md:py-20 py-10">
+    <div class="md:pb-16 space-y-4">
+      <p class="text-xl font-semibold">Please select your bank</p>
       <input type="hidden" name="token" value={token} />
       <input type="hidden" name="userId" value={userId} />
       <input type="hidden" name="price" value={price} />
-      <div class="h-80 overflow-auto">
-        <div class="grid grid-cols-3 gap-4 p-1.5">
+      <div class="md:h-1/2 overflow-auto">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-1.5">
           {
             banks.map((bank) => (
               <BankCard id={bank.code} value={bank.code} name={bank.name} />
@@ -65,12 +74,12 @@ if (Astro.request.method === "POST") {
         </div>
       </div>
     </div>
-    <div class="space-y-4 px-12">
-      <p class="text-xl">Payment Details</p>
+    <div class="space-y-4 md:px-12">
+      <p class="text-xl font-semibold">Payment Details</p>
       <Card>
         <CardContent className="flex flex-col gap-4">
           <div class="flex flex-col gap-2">
-            <h2 class="text-xl font-bold">{productName}</h2>
+            <h2 class="text-xl font-bold uppercase">Plan: {productName}</h2>
             <p class="text-sm text-gray-500">{description}</p>
           </div>
           <span class="font-bold">Amount: ${price}</span>

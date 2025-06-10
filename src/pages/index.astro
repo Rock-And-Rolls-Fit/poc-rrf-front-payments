@@ -1,56 +1,73 @@
 ---
 import Product from "@/components/Product.astro";
-import type { AliExpressProduct } from "@/interfaces";
 import Layout from "@/layouts/Layout.astro";
 import { v4 as uuidv4 } from "uuid";
 
 const userId = uuidv4();
 
-interface IProducts {
+export interface IProducts {
   title: string;
-  description: string;
-  image: string;
+  subtitle: string;
+  content: string[];
   price: number;
 }
 
-let products: IProducts[] = [];
-
-const API_URL = import.meta.env.API_ARTICLES;
-const API_KEY = import.meta.env.RAPID_API_KEY;
-const API_HOST = import.meta.env.RAPID_API_HOST;
-
-const response = await fetch(
-  `${API_URL}/hot_products?cat_id=15&sort=LAST_VOLUME_DESC&target_currency=USD&target_language=EN&page=1`,
+const products: IProducts[] = [
   {
-    method: "GET",
-    headers: {
-      "X-RapidAPI-Key": API_KEY,
-      "X-RapidAPI-Host": API_HOST,
-    },
-  }
-);
-
-if (response.ok) {
-  const results = await response.json();
-  products = results.map((product: AliExpressProduct) => ({
-    title: product.shop_name,
-    description: product.product_title,
-    image: product.product_main_image_url,
-    price: product.target_original_price,
-  }));
-}
+    title: "Rock",
+    subtitle: "$5 inscription $25 per month",
+    content: ["Meal plan.", "Customized training.", "Unlimited hours."],
+    price: 30,
+  },
+  {
+    title: "Multi Rock",
+    subtitle: "$5 inscription $35 per month",
+    content: [
+      "Access to all GYM Rocks.",
+      "Meal plan.",
+      "Customized training.",
+      "Unlimited hours.",
+    ],
+    price: 40,
+  },
+  {
+    title: "Parking Rock",
+    subtitle: "$5 inscription $45 per month",
+    content: [
+      "Parking for your car.",
+      "Meal plan.",
+      "Customized training.",
+      "Unlimited hours.",
+    ],
+    price: 50,
+  },
+];
 ---
 
 <Layout>
-  <h1 class="text-3xl font-bold mt-10 text-center">List of Products</h1>
-  <div class="flex flex-col gap-4 p-12 justify-center items-center">
-    <div class="grid grid-cols-2 gap-4 w-3/4">
+  <div class="bg-white py-10 space-y-4">
+    <div class="flex justify-center items-center">
+      <img
+        src="https://www.rockandrollsfit.com/wp-content/uploads/2025/02/cropped-logo-rockweb-01.png"
+        alt="Success"
+        class="w-40 h-auto"
+      />
+    </div>
+    <h1 class="text-6xl font-bold text-center uppercase">Plans</h1>
+    <p class="text-center text-lg text-gray-900 px-4">
+      Registration only can be done in person at the GYM.
+    </p>
+  </div>
+  <div
+    class="flex flex-col gap-4 py-20 justify-center items-center bg-[#F37622]"
+  >
+    <div class="grid md:grid-cols-3 gap-4 md:w-3/4">
       {
         products.map((product) => (
           <Product
             title={product.title}
-            description={product.description}
-            image={product.image}
+            subtitle={product.subtitle}
+            content={product.content}
             price={product.price}
             userId={userId}
           />

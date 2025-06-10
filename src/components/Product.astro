@@ -4,13 +4,13 @@ import { Card, CardContent, CardFooter } from "./ui/card";
 
 interface Props {
   title: string;
-  description: string;
-  image: string;
+  subtitle: string;
+  content: string[];
   price: number;
   userId: string;
 }
 
-const { title, description, image, price, userId } = Astro.props;
+const { title, subtitle, content, price, userId } = Astro.props;
 ---
 
 <form
@@ -18,21 +18,25 @@ const { title, description, image, price, userId } = Astro.props;
   action="/ready-to-pay"
   enctype="application/x-www-form-urlencoded"
 >
-  <Card>
-    <CardContent className="flex flex-row gap-4">
-      <img src={image} alt={title} class="w-16 h-16 rounded-full" />
+  <Card
+    className="bg-transparent border-gray-900 h-full justify-between"
+  >
+    <CardContent className="flex flex-col gap-4">
       <div>
-        <h2 class="text-xl font-semibold">{title}</h2>
-        <p class="text-sm text-gray-500">{description}</p>
+        <h2 class="text-3xl font-bold uppercase">{title}</h2>
+        <p class="text-xl font-bold text-gray-950">{subtitle}</p>
       </div>
       <input type="hidden" name="userId" value={userId} />
       <input type="hidden" name="price" value={price} />
       <input type="hidden" name="productName" value={title} />
-      <input type="hidden" name="description" value={description} />
+      <input type="hidden" name="description" value={subtitle} />
+      <ul class="pl-2 list-disc list-inside text-sm text-gray-950">
+        {content.map((item) => <li class="text-sm text-gray-950">{item}</li>)}
+      </ul>
     </CardContent>
     <CardFooter className="flex items-center justify-end gap-4">
       <p class="text-2xl font-semibold">${price}</p>
-      <Button variant="default" type="submit">Buy Now</Button>
+      <Button variant="default" type="submit" className="cursor-pointer">Get Plan</Button>
     </CardFooter>
   </Card>
 </form>
