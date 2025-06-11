@@ -16,13 +16,16 @@ export const prerender = false;
 let token;
 let price;
 let userId;
+let productId;
 let productName;
 let description;
+const buyOrderId = uuidv4();
 
 if (Astro.request.method === "POST") {
   const formData = await Astro.request.formData();
   userId = formData.get("userId") as string;
   price = formData.get("price") as string;
+  productId = formData.get("productId") as string;
   productName = formData.get("productName") as string;
   description = formData.get("description") as string;
 
@@ -32,8 +35,11 @@ if (Astro.request.method === "POST") {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      buyOrder: uuidv4(),
-      amount: price,
+      buyOrder: {
+        id: buyOrderId,
+        productId,
+        amount: price,
+      },
       sessionId: userId,
       callbackUrl: "http://localhost:3000/payment/callback",
     }),
@@ -61,11 +67,14 @@ if (Astro.request.method === "POST") {
     </div>
     <h1 class="text-center text-3xl font-bold">Ready to pay?</h1>
   </div>
-  <form class="grid md:grid-cols-2 gap-4 md:px-12 bg-[#F37622] md:py-20 py-10">
+  <form
+    class="grid md:grid-cols-2 gap-4 md:px-12 bg-rrf-primary md:py-20 py-10"
+  >
     <div class="md:pb-16 space-y-4">
       <p class="text-xl font-semibold">Please select your bank</p>
       <input type="hidden" name="token" value={token} />
       <input type="hidden" name="userId" value={userId} />
+      <input type="hidden" name="buyOrderId" value={buyOrderId} />
       <input type="hidden" name="price" value={price} />
       <div class="md:h-1/2 overflow-auto">
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-1.5">
@@ -133,6 +142,7 @@ if (Astro.request.method === "POST") {
     const token = formData.get("token") as string;
     const userId = formData.get("userId") as string;
     const price = formData.get("price") as string;
+    const buyOrderId = formData.get("buyOrderId") as string;
 
     // Get selected bank
     const selectedBank = document.querySelector(
@@ -142,7 +152,6 @@ if (Astro.request.method === "POST") {
     const phoneNumber = formData.get("phoneNumber") as string;
     const bankCodeSecurity = formData.get("bankCodeSecurity") as string;
     const taxDocument = formData.get("taxDocument") as string;
-    console.log(taxDocument);
 
     if (!bankCode) {
       alert("Please select a bank");
@@ -170,11 +179,14 @@ if (Astro.request.method === "POST") {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        userId,
         taxDocumentId: taxDocument,
         phoneNumber,
         bankCode,
         token: bankCodeSecurity,
         amount: price,
+        securityId: token,
+        buyOrderId,
       }),
     });
 
@@ -183,6 +195,11 @@ if (Astro.request.method === "POST") {
       return;
     }
 
-    window.location.href = "/success";
+    const response = await result.json();
+
+    const reference = response.reference;
+    const buyOrder = response.buyOrderId;
+
+    window.location.href = `/success?operation=${reference}&buy-order=${buyOrder}`;
   });
 </script>

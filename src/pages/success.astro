@@ -1,6 +1,31 @@
 ---
+import { Card, CardContent } from "@/components/ui/card";
+import { routes } from "@/constants";
 import Layout from "@/layouts/Layout.astro";
 import { Image } from "astro:assets";
+
+export const prerender = false;
+
+const url = new URL(Astro.request.url);
+const buyOrder = url.searchParams.get("buy-order") as string;
+const operation = url.searchParams.get("operation") as string;
+
+if (!operation || !buyOrder) {
+  return Astro.redirect("/");
+}
+
+const response = await fetch(routes.GET_PAYMENT(buyOrder, operation));
+
+if (!response.ok) {
+  return Astro.redirect("/");
+}
+
+const result = await response.json();
+
+const reference = result.reference;
+const amount = result.amount;
+const date = result.metadata.date.split("T")[0];
+const hour = result.metadata.hour;
 ---
 
 <Layout>
@@ -17,8 +42,28 @@ import { Image } from "astro:assets";
     <h1 class="text-center text-3xl font-bold">Success!</h1>
   </div>
   <div class="bg-[#F37622] py-20 px-4">
-    <div class="flex flex-col gap-4 pb-16">
+    <div class="flex flex-col gap-4 pb-16 mx-auto max-w-2xl">
       <p class="text-xl font-semibold">Your payment was successful!</p>
+      <Card>
+        <CardContent>
+          <div class="flex flex-row gap-2 items-center">
+            <p class="text-lg font-bold">Date and Time</p>
+            <p>{date} {hour}</p>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <p class="text-lg font-bold">Reference</p>
+            <p>{reference}</p>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <p class="text-lg font-bold">Order Reference</p>
+            <p>{buyOrder}</p>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <p class="text-lg font-bold">USD</p>
+            <p>${amount}</p>
+          </div>
+        </CardContent>
+      </Card>
       <p class="text-sm text-gray-900">
         You will receive an email with the invoice number and the payment
         details.

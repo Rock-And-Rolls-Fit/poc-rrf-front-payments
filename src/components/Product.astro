@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter } from "./ui/card";
 
 interface Props {
+  id: string;
   title: string;
   subtitle: string;
   content: string[];
@@ -10,7 +11,7 @@ interface Props {
   userId: string;
 }
 
-const { title, subtitle, content, price, userId } = Astro.props;
+const { title, subtitle, content, price, userId, id } = Astro.props;
 ---
 
 <form
@@ -27,6 +28,7 @@ const { title, subtitle, content, price, userId } = Astro.props;
         <p class="text-xl font-bold text-gray-950">{subtitle}</p>
       </div>
       <input type="hidden" name="userId" value={userId} />
+      <input type="hidden" name="productId" value={id} />
       <input type="hidden" name="price" value={price} />
       <input type="hidden" name="productName" value={title} />
       <input type="hidden" name="description" value={subtitle} />
