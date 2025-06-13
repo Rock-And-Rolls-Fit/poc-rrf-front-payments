@@ -1,6 +1,7 @@
 ---
 import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter } from "./ui/card";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/astro/components";
 
 interface Props {
   id: string;
@@ -14,15 +15,14 @@ interface Props {
 const { title, subtitle, content, price, userId, id } = Astro.props;
 ---
 
-<form
-  method="post"
-  action="/ready-to-pay"
-  enctype="application/x-www-form-urlencoded"
->
-  <Card
-    className="bg-transparent border-gray-900 h-full justify-between"
-  >
-    <CardContent className="flex flex-col gap-4">
+<Card className="bg-transparent border-gray-900 h-full justify-between">
+  <CardContent className="flex flex-col gap-4">
+    <form
+      method="post"
+      action="/ready-to-pay"
+      enctype="application/x-www-form-urlencoded"
+      id={`form-${id}`}
+    >
       <div>
         <h2 class="text-3xl font-bold uppercase">{title}</h2>
         <p class="text-xl font-bold text-gray-950">{subtitle}</p>
@@ -35,10 +35,25 @@ const { title, subtitle, content, price, userId, id } = Astro.props;
       <ul class="pl-2 list-disc list-inside text-sm text-gray-950">
         {content.map((item) => <li class="text-sm text-gray-950">{item}</li>)}
       </ul>
-    </CardContent>
-    <CardFooter className="flex items-center justify-end gap-4">
-      <p class="text-2xl font-semibold">${price}</p>
-      <Button variant="default" type="submit" className="cursor-pointer">Get Plan</Button>
-    </CardFooter>
-  </Card>
-</form>
+    </form>
+  </CardContent>
+  <CardFooter className="flex items-center justify-end gap-4">
+    <p class="text-2xl font-semibold">${price}</p>
+    <SignedOut>
+      <SignInButton mode="modal" asChild>
+        <button
+          class="cursor-pointer font-bold hover:underline hover:underline-offset-4"
+          >Sign In</button
+        >
+      </SignInButton>
+    </SignedOut>
+    <SignedIn>
+      <Button
+        form={`form-${id}`}
+        variant="default"
+        type="submit"
+        className="cursor-pointer">Get Plan</Button
+      >
+    </SignedIn>
+  </CardFooter>
+</Card>
