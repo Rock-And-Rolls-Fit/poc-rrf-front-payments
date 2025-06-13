@@ -66,13 +66,15 @@ if (Astro.request.method === "POST") {
         loading="eager"
       />
     </div>
-    <h1 class="text-center text-3xl font-bold">Ready to pay {userData?.firstName}?</h1>
+    <h1 class="text-center text-3xl font-bold">
+      Listo para pagar {userData?.firstName}?
+    </h1>
   </div>
   <form
     class="grid md:grid-cols-2 gap-4 md:px-52 bg-rrf-primary md:py-20 py-10"
   >
     <div class="md:pb-16 space-y-4">
-      <p class="text-xl font-semibold">Please select your bank</p>
+      <p class="text-xl font-semibold">Por favor selecciona tu banco</p>
       <input type="hidden" name="token" value={token} />
       <input type="hidden" name="userId" value={userId} />
       <input type="hidden" name="buyOrderId" value={buyOrderId} />
@@ -88,23 +90,23 @@ if (Astro.request.method === "POST") {
       </div>
     </div>
     <div class="space-y-4 md:px-12">
-      <p class="text-xl font-semibold">Payment Details</p>
+      <p class="text-xl font-semibold">Detalles de pago</p>
       <Card>
         <CardContent className="flex flex-col gap-4">
           <div class="flex flex-col gap-2">
             <h2 class="text-xl font-bold uppercase">Plan: {productName}</h2>
             <p class="text-sm text-gray-500">{description}</p>
           </div>
-          <span class="font-bold">Amount: ${price}</span>
+          <span class="font-bold">Monto: ${price}</span>
           <hr />
           <div class="flex flex-col gap-2">
-            <Label>Bank Code</Label>
+            <Label>Código de seguridad</Label>
             <div class="flex flex-row justify-center">
               <BankCodeSecurity client:visible />
             </div>
           </div>
           <div class="flex flex-col gap-2">
-            <Label>Phone Number</Label>
+            <Label>Número de teléfono</Label>
             <Input
               type="tel"
               placeholder="Phone Number"
@@ -114,7 +116,7 @@ if (Astro.request.method === "POST") {
             />
           </div>
           <div class="flex flex-col gap-2">
-            <Label>Tax Document Id</Label>
+            <Label>Cédula de identidad</Label>
             <Input
               type="text"
               placeholder="V012340163"
@@ -125,7 +127,7 @@ if (Astro.request.method === "POST") {
           </div>
         </CardContent>
         <CardFooter>
-          <Button className="w-full"><Banknote /> Pay</Button>
+          <Button className="w-full"><Banknote /> Pagar</Button>
         </CardFooter>
       </Card>
     </div>
