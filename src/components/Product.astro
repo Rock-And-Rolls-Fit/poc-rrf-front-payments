@@ -40,7 +40,7 @@ const { title, subtitle, content, price, userId, id } = Astro.props;
   <CardFooter className="flex items-center justify-end gap-4">
     <p class="text-2xl font-semibold">${price}</p>
     <SignedOut>
-      <SignInButton mode="redirect" asChild>
+      <SignInButton mode="modal" asChild>
         <button
           class="cursor-pointer font-bold hover:underline hover:underline-offset-4"
           >Inicia Sesión</button
