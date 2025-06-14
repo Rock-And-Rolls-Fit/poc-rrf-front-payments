@@ -9,7 +9,7 @@ import { esES } from '@clerk/localizations'
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [preact(), clerk({ localization: esES })],
+  integrations: [preact(), clerk({ localization: esES, })],
 
   vite: {
     plugins: [tailwindcss()]
