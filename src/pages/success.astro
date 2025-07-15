@@ -1,6 +1,6 @@
 ---
 import { Card, CardContent } from "@/components/ui/card";
-import { routes } from "@/constants";
+import { ROUTES } from "@/constants";
 import Layout from "@/layouts/Layout.astro";
 import { Image } from "astro:assets";
 const userData = await Astro.locals.currentUser();
@@ -15,7 +15,7 @@ if (!operation || !buyOrder) {
   return Astro.redirect("/");
 }
 
-const response = await fetch(routes.GET_PAYMENT(buyOrder, operation));
+const response = await fetch(ROUTES.GET_PAYMENT(buyOrder, operation));
 
 if (!response.ok) {
   return Astro.redirect("/");
