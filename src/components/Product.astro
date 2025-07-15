@@ -41,9 +41,10 @@ const { title, subtitle, content, price, userId, id } = Astro.props;
     <p class="text-2xl font-semibold">${price}</p>
     <SignedOut>
       <SignInButton mode="modal" asChild>
-        <button
-          class="cursor-pointer font-bold hover:underline hover:underline-offset-4"
-          >Inicia Sesión</button
+        <Button
+          client:load
+          variant="secondary"
+          className="cursor-pointer">Inicia Sesión</Button
         >
       </SignInButton>
     </SignedOut>
