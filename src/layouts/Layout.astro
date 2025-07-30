@@ -5,6 +5,7 @@ import '@fontsource/rajdhani/500.css';
 import '@fontsource/rajdhani/600.css';
 import '@fontsource/rajdhani/700.css';
 import "@/styles/global.css";
+import { UserButton } from '@clerk/astro/components';
 ---
 
 <!doctype html>
@@ -16,6 +17,7 @@ import "@/styles/global.css";
     <title>RNR Fit Payments</title>
   </head>
   <body class="bg-gray-100">
+    <UserButton />
     <slot />
   </body>
 </html>

@@ -1,0 +1,129 @@
+---
+import { Image } from "astro:assets";
+import Layout from "@/layouts/Layout.astro";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Smartphone from "@/assets/images/smartphone.astro";
+
+// Handle POST request data
+let paymentData = {
+  userId: "",
+  productId: "",
+  price: "",
+  productName: "",
+  description: ""
+};
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  paymentData = {
+    userId: formData.get("userId")?.toString() || "",
+    productId: formData.get("productId")?.toString() || "",
+    price: formData.get("price")?.toString() || "",
+    productName: formData.get("productName")?.toString() || "",
+    description: formData.get("description")?.toString() || ""
+  };
+}
+---
+
+<Layout>
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="w-full py-10 space-y-4 flex flex-col items-center">
+      <div class="flex justify-center items-center">
+        <Image
+          src="https://www.rockandrollsfit.com/wp-content/uploads/2025/02/cropped-logo-rockweb-01.png"
+          alt="Success"
+          class="w-40 h-auto"
+          inferSize
+          loading="eager"
+        />
+      </div>
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+          Selecciona tu método de pago
+        </h1>
+        <p class="text-gray-600">
+          Elige la opción que mejor se adapte a tus necesidades
+        </p>
+      </div>
+
+      <div class="w-full bg-primary flex justify-center items-center py-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl">
+          <!-- Card para Botón de Pago BT -->
+          <Card
+            className="hover:shadow-lg transition-all duration-300 cursor-pointer group"
+          >
+            <form action="/bt-pay" method="POST" class="block">
+              <input type="hidden" name="userId" value={paymentData.userId} />
+              <input type="hidden" name="productId" value={paymentData.productId} />
+              <input type="hidden" name="price" value={paymentData.price} />
+              <input type="hidden" name="productName" value={paymentData.productName} />
+              <input type="hidden" name="description" value={paymentData.description} />
+              
+              <CardHeader className="text-center pb-4">
+                <div class="flex justify-center mb-4">
+                  <img
+                    src="/images/bt-pay/bt-pay-logo.webp"
+                    alt="BT Pay Logo"
+                    class="w-16 h-16 object-contain"
+                  />
+                </div>
+                <CardTitle className="text-xl font-semibold text-gray-900">
+                  Botón de Pago BT
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p class="text-gray-600 text-sm mb-4">
+                  Pago rápido y seguro con BT Pay
+                </p>
+                <Button
+                  type="submit"
+                  variant="default"
+                  size="lg"
+                  className="w-full transition-colors"
+                >
+                  Seleccionar
+                </Button>
+              </CardContent>
+            </form>
+          </Card>
+
+          <!-- Card para Pago Móvil -->
+          <Card
+            className="hover:shadow-lg transition-all duration-300 cursor-pointer group"
+          >
+            <form action="/mobile-pay" method="POST" class="block">
+              <input type="hidden" name="userId" value={paymentData.userId} />
+              <input type="hidden" name="productId" value={paymentData.productId} />
+              <input type="hidden" name="price" value={paymentData.price} />
+              <input type="hidden" name="productName" value={paymentData.productName} />
+              <input type="hidden" name="description" value={paymentData.description} />
+              
+              <CardHeader className="text-center pb-4">
+                <div class="flex justify-center mb-4">
+                  <Smartphone width={64} height={64} />
+                </div>
+                <CardTitle className="text-xl font-semibold text-gray-900">
+                  Pago Móvil
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p class="text-gray-600 text-sm mb-4">
+                  Pago desde tu dispositivo móvil
+                </p>
+                <Button
+                  type="submit"
+                  variant="default"
+                  size="lg"
+                  className="w-full transition-colors"
+                >
+                  Seleccionar
+                </Button>
+              </CardContent>
+            </form>
+          </Card>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

@@ -4,7 +4,6 @@ import type { IProducts } from "@/interfaces";
 import Layout from "@/layouts/Layout.astro";
 import { Image } from "astro:assets";
 import { LOCAL_API_URL } from "@/constants";
-import { UserButton } from "@clerk/astro/components";
 const { userId } = Astro.locals.auth();
 
 const response = await fetch(`${LOCAL_API_URL}/api/products.json`);
@@ -17,7 +16,6 @@ const products: IProducts[] = await response.json();
 ---
 
 <Layout>
-  <UserButton />
   <div class="bg-white py-10 space-y-4">
     <div class="flex justify-center items-center">
       <Image

@@ -1,0 +1,78 @@
+---
+import { Image } from "astro:assets";
+import { v4 as uuidv4 } from "uuid";
+import Layout from "@/layouts/Layout.astro";
+import FormButtonPay from "@/components/FormButtonPay.astro";
+import { ROUTES } from "@/constants";
+
+export const prerender = false;
+
+let token;
+let price;
+let userId;
+let productId;
+let productName;
+let description;
+const buyOrderId = uuidv4();
+const userData = await Astro.locals.currentUser();
+
+if (Astro.request.method === "POST") {
+  const formData = await Astro.request.formData();
+  userId = formData.get("userId") as string;
+  price = formData.get("price") as string;
+  productId = formData.get("productId") as string;
+  productName = formData.get("productName") as string;
+  description = formData.get("description") as string;
+
+  const response = await fetch(ROUTES.CREATE_LINK, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      buyOrder: {
+        id: buyOrderId,
+        productId,
+        amount: price,
+      },
+      paymentMethod: "bt_pay",
+      sessionId: userId,
+      callbackUrl: "http://localhost:3000/payment/callback",
+    }),
+  });
+
+  if (response.ok) {
+    const { link } = await response.json();
+    token = link.token;
+  }
+} else {
+  return Astro.redirect("/");
+}
+---
+
+<Layout title="Ready to pay">
+  <div class="bg-white py-10 space-y-4">
+    <div class="flex justify-center items-center">
+      <Image
+        src="https://www.rockandrollsfit.com/wp-content/uploads/2025/02/cropped-logo-rockweb-01.png"
+        alt="Success"
+        class="w-40 h-auto"
+        inferSize
+        loading="eager"
+      />
+    </div>
+    <h1 class="text-center text-3xl font-bold">
+      Listo para pagar {userData?.firstName}?
+    </h1>
+  </div>
+  <div class="bg-primary h-screen pt-10 px-2">
+    <FormButtonPay
+      token={token}
+      userId={userId}
+      buyOrderId={buyOrderId}
+      price={price}
+      productName={productName}
+      description={description}
+    />
+  </div>
+</Layout>
