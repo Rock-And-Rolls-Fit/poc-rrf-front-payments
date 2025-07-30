@@ -12,7 +12,7 @@ const { token, userId, buyOrderId, price, productName, description, userData } =
   Astro.props;
 ---
 
-<form class="grid md:grid-cols-2 gap-4 md:px-52 bg-primary md:py-20 py-10">
+<form class="grid md:grid-cols-2 gap-4 md:px-52 md:py-20 py-10">
   <div class="md:pb-16 space-y-4">
     <p class="text-xl font-semibold">Por favor selecciona tu banco</p>
     <input type="hidden" name="token" value={token} />
