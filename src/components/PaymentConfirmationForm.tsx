@@ -123,6 +123,10 @@ export default function PaymentConfirmationForm({
     );
   }
 
+  const subTotal = Number(priceExchange);
+  const iva = parseFloat((subTotal * 0.16).toFixed(2));
+  const total = parseFloat((subTotal + iva).toFixed(2));
+
   return (
     <div className="max-w-md mx-auto">
       <Card>
@@ -152,11 +156,24 @@ export default function PaymentConfirmationForm({
                 <span className="font-medium">{description}</span>
               </div>
               <div className="flex md:justify-between max-md:gap-2">
-                <span className="text-muted-foreground">Monto:</span>
-                <span className="font-bold text-primary">
-                  VES {Intl.NumberFormat("es-VE").format(
-                    parseFloat((Number(priceExchange) * 1.16).toFixed(2))
-                  )}
+                <span className="text-muted-foreground">Sub Total:</span>
+                <span className="font-medium">
+                  VES{" "}
+                  {`${Intl.NumberFormat("es-VE").format(
+                    Number(subTotal)
+                  )} | $${price}`}
+                </span>
+              </div>
+              <div className="flex md:justify-between max-md:gap-2">
+                <span className="text-muted-foreground">IVA:</span>
+                <span className="font-medium">
+                  {`${Intl.NumberFormat("es-VE").format(Number(iva))}`}
+                </span>
+              </div>
+              <div className="flex md:justify-between max-md:gap-2">
+                <span className="text-muted-foreground">Total:</span>
+                <span className="font-medium">
+                  VES {`${Intl.NumberFormat("es-VE").format(Number(total))}`}
                 </span>
               </div>
             </div>

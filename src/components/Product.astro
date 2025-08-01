@@ -15,8 +15,16 @@ interface Props {
   exchangeInfo: IExchangeRate;
 }
 
-const { title, subtitle, content, price, userId, id, priceExchange, exchangeInfo } =
-  Astro.props;
+const {
+  title,
+  subtitle,
+  content,
+  price,
+  userId,
+  id,
+  priceExchange,
+  exchangeInfo,
+} = Astro.props;
 ---
 
 <Card className="bg-white border-gray-900 h-full justify-between">
@@ -46,11 +54,9 @@ const { title, subtitle, content, price, userId, id, priceExchange, exchangeInfo
   </CardContent>
   <CardFooter className="flex items-center justify-between gap-4">
     <div class="flex flex-col items-start">
-      <p class="text-2xl font-semibold">${price}</p>
+      <p class="text-2xl font-semibold">REF. ${price}</p>
       <p class="text-sm text-gray-500">
-        REF: {
-          Intl.NumberFormat("es-VE").format(priceExchange)
-        }
+        VES {Intl.NumberFormat("es-VE").format(priceExchange)}
       </p>
     </div>
     <SignedOut>
