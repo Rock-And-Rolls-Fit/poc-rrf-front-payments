@@ -27,6 +27,7 @@ const reference = result.reference;
 const amount = result.amount;
 const date = result.metadata.date.split("T")[0];
 const hour = result.metadata.hour;
+const priceExchange = result.priceExchange;
 ---
 
 <Layout>
@@ -64,6 +65,10 @@ const hour = result.metadata.hour;
           <div class="flex flex-row gap-2 items-center">
             <p class="text-lg font-bold">Monto</p>
             <p>${amount}</p>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <p class="text-lg font-bold">Monto REF</p>
+            <p>{Intl.NumberFormat("es-VE").format(Number(priceExchange))}</p>
           </div>
         </CardContent>
       </Card>
