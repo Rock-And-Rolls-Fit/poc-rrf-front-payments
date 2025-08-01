@@ -152,13 +152,11 @@ export default function PaymentConfirmationForm({
                 <span className="font-medium">{description}</span>
               </div>
               <div className="flex md:justify-between max-md:gap-2">
-                <span className="text-muted-foreground">Precio:</span>
-                <span className="font-bold text-primary">${price}</span>
-              </div>
-              <div className="flex md:justify-between max-md:gap-2">
-                <span className="text-muted-foreground">Precio REF:</span>
+                <span className="text-muted-foreground">Monto:</span>
                 <span className="font-bold text-primary">
-                  {Intl.NumberFormat("es-VE").format(Number(priceExchange))}
+                  VES {Intl.NumberFormat("es-VE").format(
+                    parseFloat((Number(priceExchange) * 1.16).toFixed(2))
+                  )}
                 </span>
               </div>
             </div>

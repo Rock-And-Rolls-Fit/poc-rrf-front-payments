@@ -17,6 +17,10 @@ export default function PaymentData({
   dateValueExchange,
   handleButtonClick,
 }: PaymentDataProps) {
+  const subTotal = Number(priceExchange);
+  const iva = parseFloat((subTotal * 0.16).toFixed(2));
+  const total = parseFloat((subTotal + iva).toFixed(2));
+
   return (
     <div className="max-w-md mx-auto">
       <Card>
@@ -46,12 +50,29 @@ export default function PaymentData({
               </div>
               <div className="flex md:justify-between max-md:gap-2">
                 <span className="text-muted-foreground">Teléfono:</span>
-                <span className="font-bold text-primary">{paymentInformation.phone}</span>
+                <span className="font-bold text-primary">
+                  {paymentInformation.phone}
+                </span>
               </div>
               <div className="flex md:justify-between max-md:gap-2">
-                <span className="text-muted-foreground">Monto:</span>
+                <span className="text-muted-foreground">Sub Total:</span>
                 <span className="font-bold text-primary">
-                  {`${Intl.NumberFormat("es-VE").format(Number(priceExchange))} | $${price}`}
+                  VES{" "}
+                  {`${Intl.NumberFormat("es-VE").format(
+                    Number(subTotal)
+                  )} | $${price}`}
+                </span>
+              </div>
+              <div className="flex md:justify-between max-md:gap-2">
+                <span className="text-muted-foreground">IVA:</span>
+                <span className="font-bold text-primary">
+                  {`${Intl.NumberFormat("es-VE").format(Number(iva))}`}
+                </span>
+              </div>
+              <div className="flex md:justify-between max-md:gap-2">
+                <span className="text-muted-foreground">Total:</span>
+                <span className="font-bold text-primary">
+                  VES {`${Intl.NumberFormat("es-VE").format(Number(total))}`}
                 </span>
               </div>
             </div>
