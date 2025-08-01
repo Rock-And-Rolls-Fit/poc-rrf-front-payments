@@ -25,3 +25,9 @@ export const banks = [
   { code: "0178", name: "N58 BANCO DIGITAL" },
   { code: "0156", name: "100 % BANCO" },
 ];
+
+export const paymentInformation = {
+  bankName: "Banco del Tesoro",
+  taxDocument: "J-502896872",
+  phone: "0424-285-9949",
+};

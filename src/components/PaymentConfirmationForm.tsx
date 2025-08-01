@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 import { ROUTES } from "../constants/routes";
+import PaymentData from "./PaymentData";
 
 interface FormPaymentConfirmationProps {
   token: string;
@@ -31,6 +32,7 @@ export default function PaymentConfirmationForm({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showPaymentData, setShowPaymentData] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,8 +53,6 @@ export default function PaymentConfirmationForm({
         value,
         dateValue,
       };
-
-      console.log({ payload });
 
       const response = await fetch(ROUTES.SEND_PAYMENT_CONFIRMATION, {
         method: "POST",
@@ -87,6 +87,10 @@ export default function PaymentConfirmationForm({
     }
   };
 
+  const handleButtonClick = () => {
+    setShowPaymentData(false);
+  };
+
   if (success) {
     return (
       <div className="max-w-md mx-auto">
@@ -104,6 +108,18 @@ export default function PaymentConfirmationForm({
           </CardContent>
         </Card>
       </div>
+    );
+  }
+
+  if (showPaymentData) {
+    return (
+      <PaymentData
+        priceExchange={priceExchange}
+        price={price}
+        handleButtonClick={handleButtonClick}
+        valueExchange={value}
+        dateValueExchange={dateValue}
+      />
     );
   }
 
@@ -192,18 +208,6 @@ export default function PaymentConfirmationForm({
           </Button>
         </CardFooter>
       </Card>
-      <div className="text-sm mt-4 text-gray-200">
-        <div className="space-x-2 text-center ">
-          <span>Valor de tasa de cambio</span>
-          <span className="font-bold text-gray-700">
-            {Intl.NumberFormat("es-VE").format(Number(value))}
-          </span>
-        </div>
-        <div className="space-x-2 text-center">
-          <span>según Banco Central de Venezuela el</span>
-          <span className="font-bold text-gray-700">{dateValue}</span>
-        </div>
-      </div>
     </div>
   );
 }
