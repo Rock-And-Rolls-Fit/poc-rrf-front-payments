@@ -13,6 +13,10 @@ let userId;
 let productId;
 let productName;
 let description;
+let priceExchange;
+let value;
+let dateValue;
+
 const buyOrderId = uuidv4();
 const userData = await Astro.locals.currentUser();
 
@@ -23,6 +27,9 @@ if (Astro.request.method === "POST") {
   productId = formData.get("productId") as string;
   productName = formData.get("productName") as string;
   description = formData.get("description") as string;
+  priceExchange = formData.get("priceExchange") as string;
+  value = formData.get("value") as string;
+  dateValue = formData.get("dateValue") as string;
 
   const response = await fetch(ROUTES.CREATE_LINK, {
     method: "POST",
@@ -73,6 +80,9 @@ if (Astro.request.method === "POST") {
       price={price}
       productName={productName}
       description={description}
+      priceExchange={priceExchange}
+      value={value}
+      dateValue={dateValue}
     />
   </div>
 </Layout>

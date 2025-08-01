@@ -1,6 +1,6 @@
 ---
 import Product from "@/components/Product.astro";
-import type { IProducts } from "@/interfaces";
+import type { IProductsResponse } from "@/interfaces";
 import Layout from "@/layouts/Layout.astro";
 import { Image } from "astro:assets";
 import { LOCAL_API_URL } from "@/constants";
@@ -12,7 +12,7 @@ if (!response.ok) {
   return new Response("Failed to fetch products", { status: 500 });
 }
 
-const products: IProducts[] = await response.json();
+const { products, exchangeInfo } = (await response.json()) as IProductsResponse;
 ---
 
 <Layout>
@@ -31,9 +31,7 @@ const products: IProducts[] = await response.json();
       Selecciona el plan que más se adapte a ti.
     </p>
   </div>
-  <div
-    class="flex flex-col gap-4 py-20 justify-center items-center bg-primary"
-  >
+  <div class="flex flex-col gap-4 py-20 justify-center items-center bg-primary">
     <div class="grid md:grid-cols-3 gap-4 md:w-3/4">
       {
         products.map((product) => (
@@ -43,7 +41,9 @@ const products: IProducts[] = await response.json();
             subtitle={product.subtitle}
             content={product.content}
             price={product.price}
+            priceExchange={product.priceExchange}
             userId={userId || ""}
+            exchangeInfo={exchangeInfo}
           />
         ))
       }

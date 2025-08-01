@@ -1,7 +1,14 @@
 import type { IProducts } from "@/interfaces";
 import type { APIRoute } from "astro";
+import { ROUTES } from "@/constants/routes";
+import type { IExchangeRateResponse } from "@/interfaces";
 
 export const GET: APIRoute = async () => {
+  const response = await fetch(ROUTES.GET_EXCHANGE_RATE);
+  const { data } = (await response.json()) as IExchangeRateResponse;
+
+  const amountExchange = Number(data.value);
+
   const products: IProducts[] = [
     {
       id: "rock-1",
@@ -13,6 +20,7 @@ export const GET: APIRoute = async () => {
         "Sin limites de horarios.",
       ],
       price: 30,
+      priceExchange: Number((30 * amountExchange).toFixed(2)),
     },
     {
       id: "rock-multi",
@@ -25,6 +33,7 @@ export const GET: APIRoute = async () => {
         "Sin limites de horarios.",
       ],
       price: 40,
+      priceExchange: Number((40 * amountExchange).toFixed(2)),
     },
     {
       id: "rock-parking",
@@ -37,8 +46,18 @@ export const GET: APIRoute = async () => {
         "Sin limites de horarios.",
       ],
       price: 50,
+      priceExchange: Number((50 * amountExchange).toFixed(2)),
     },
   ];
 
-  return new Response(JSON.stringify(products));
+  return new Response(
+    JSON.stringify({
+      products,
+      exchangeInfo: {
+        exchange: data.exchange,
+        value: data.value,
+        dateValue: data.dateValue,
+      },
+    })
+  );
 };

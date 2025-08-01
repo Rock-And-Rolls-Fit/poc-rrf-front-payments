@@ -8,8 +8,18 @@ import { Input } from "@/components/ui/input";
 import { Banknote } from "@lucide/astro";
 import { banks } from "@/constants";
 
-const { token, userId, buyOrderId, price, productName, description, userData } =
-  Astro.props;
+const {
+  token,
+  userId,
+  buyOrderId,
+  price,
+  productName,
+  description,
+  userData,
+  priceExchange,
+  value,
+  dateValue,
+} = Astro.props;
 ---
 
 <form class="grid md:grid-cols-2 gap-4 md:px-52 md:py-20 py-10">
@@ -19,6 +29,9 @@ const { token, userId, buyOrderId, price, productName, description, userData } =
     <input type="hidden" name="userId" value={userId} />
     <input type="hidden" name="buyOrderId" value={buyOrderId} />
     <input type="hidden" name="price" value={price} />
+    <input type="hidden" name="priceExchange" value={priceExchange} />
+    <input type="hidden" name="valueExchange" value={value} />
+    <input type="hidden" name="dateValueExchange" value={dateValue} />
     <div class="md:h-1/2 overflow-auto">
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-1.5">
         {
@@ -37,7 +50,18 @@ const { token, userId, buyOrderId, price, productName, description, userData } =
           <h2 class="text-xl font-bold uppercase">Plan: {productName}</h2>
           <p class="text-sm text-gray-500">{description}</p>
         </div>
-        <span class="font-bold">Monto: ${price}</span>
+        <div>
+          <div class="flex flex-row gap-2 items-center">
+            <span class="font-bold">Monto:</span>
+            <span class="text-xl font-bold text-primary">${price}</span>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <span class="font-bold">Monto REF:</span>
+            <span class="text-xl font-bold text-primary">
+              {Intl.NumberFormat("es-VE").format(Number(priceExchange))}
+            </span>
+          </div>
+        </div>
         <hr />
         <div class="flex flex-col gap-2">
           <Label>Código de seguridad</Label>
@@ -70,6 +94,18 @@ const { token, userId, buyOrderId, price, productName, description, userData } =
         <Button className="w-full"><Banknote /> Pagar</Button>
       </CardFooter>
     </Card>
+    <div class="text-sm mt-4 text-gray-200">
+      <div class="space-x-2 text-center">
+        <span>Valor de tasa de cambio</span>
+        <span class="font-bold text-gray-700">
+          {Intl.NumberFormat("es-VE").format(Number(value))}
+        </span>
+      </div>
+      <div class="space-x-2 text-center">
+        <span>según Banco Central de Venezuela el</span>
+        <span class="font-bold text-gray-700">{dateValue}</span>
+      </div>
+    </div>
   </div>
 </form>
 
@@ -87,6 +123,9 @@ const { token, userId, buyOrderId, price, productName, description, userData } =
     const userId = formData.get("userId") as string;
     const price = formData.get("price") as string;
     const buyOrderId = formData.get("buyOrderId") as string;
+    const priceExchange = formData.get("priceExchange") as string;
+    const valueExchange = formData.get("valueExchange") as string;
+    const dateValueExchange = formData.get("dateValueExchange") as string;
 
     // Get selected bank
     const selectedBank = document.querySelector(
@@ -131,6 +170,9 @@ const { token, userId, buyOrderId, price, productName, description, userData } =
         amount: price,
         securityId: token,
         buyOrderId,
+        priceExchange,
+        valueExchange,
+        dateValueExchange,
       }),
     });
 

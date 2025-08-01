@@ -11,7 +11,10 @@ let paymentData = {
   productId: "",
   price: "",
   productName: "",
-  description: ""
+  description: "",
+  priceExchange: "",
+  value: "",
+  dateValue: ""
 };
 
 if (Astro.request.method === "POST") {
@@ -21,7 +24,10 @@ if (Astro.request.method === "POST") {
     productId: formData.get("productId")?.toString() || "",
     price: formData.get("price")?.toString() || "",
     productName: formData.get("productName")?.toString() || "",
-    description: formData.get("description")?.toString() || ""
+    description: formData.get("description")?.toString() || "",
+    priceExchange: formData.get("priceExchange")?.toString() || "",
+    value: formData.get("value")?.toString() || "",
+    dateValue: formData.get("dateValue")?.toString() || ""
   };
 }
 ---
@@ -59,6 +65,9 @@ if (Astro.request.method === "POST") {
               <input type="hidden" name="price" value={paymentData.price} />
               <input type="hidden" name="productName" value={paymentData.productName} />
               <input type="hidden" name="description" value={paymentData.description} />
+              <input type="hidden" name="priceExchange" value={paymentData.priceExchange} />
+              <input type="hidden" name="value" value={paymentData.value} />
+              <input type="hidden" name="dateValue" value={paymentData.dateValue} />
               
               <CardHeader className="text-center pb-4">
                 <div class="flex justify-center mb-4">
@@ -98,7 +107,10 @@ if (Astro.request.method === "POST") {
               <input type="hidden" name="price" value={paymentData.price} />
               <input type="hidden" name="productName" value={paymentData.productName} />
               <input type="hidden" name="description" value={paymentData.description} />
-              
+              <input type="hidden" name="priceExchange" value={paymentData.priceExchange} />
+              <input type="hidden" name="value" value={paymentData.value} />
+              <input type="hidden" name="dateValue" value={paymentData.dateValue} />
+
               <CardHeader className="text-center pb-4">
                 <div class="flex justify-center mb-4">
                   <Smartphone width={64} height={64} />

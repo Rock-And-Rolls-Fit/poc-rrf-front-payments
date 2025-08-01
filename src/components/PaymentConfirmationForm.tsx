@@ -12,6 +12,9 @@ interface FormPaymentConfirmationProps {
   price: string;
   productName: string;
   description: string;
+  priceExchange: string;
+  value: string;
+  dateValue: string;
 }
 
 export default function PaymentConfirmationForm({
@@ -21,6 +24,9 @@ export default function PaymentConfirmationForm({
   price,
   productName,
   description,
+  priceExchange,
+  value,
+  dateValue,
 }: FormPaymentConfirmationProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +47,12 @@ export default function PaymentConfirmationForm({
         buyOrderId,
         amount: price,
         referenceNumber,
+        priceExchange,
+        value,
+        dateValue,
       };
+
+      console.log({ payload });
 
       const response = await fetch(ROUTES.SEND_PAYMENT_CONFIRMATION, {
         method: "POST",
@@ -52,23 +63,14 @@ export default function PaymentConfirmationForm({
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message ||
-            `Error ${response.status}: ${response.statusText}`
-        );
-      }
-
-      const result = await response.json();
-      console.log("Payment confirmation sent successfully:", result);
-      setSuccess(true);
-
-      // Optionally redirect or show success message
-      if (!result.ok) {
         window.location.href = "/transaction-failed";
         return;
       }
 
+      const result = await response.json();
+      console.log("Payment confirmation sent successfully:", result);
+
+      setSuccess(true);
       const reference = result.reference;
       const buyOrder = result.buyOrderId;
 
@@ -137,6 +139,12 @@ export default function PaymentConfirmationForm({
                 <span className="text-muted-foreground">Precio:</span>
                 <span className="font-bold text-primary">${price}</span>
               </div>
+              <div className="flex md:justify-between max-md:gap-2">
+                <span className="text-muted-foreground">Precio REF:</span>
+                <span className="font-bold text-primary">
+                  {Intl.NumberFormat("es-VE").format(Number(priceExchange))}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -153,7 +161,10 @@ export default function PaymentConfirmationForm({
             <input type="hidden" name="securityId" value={token} />
             <input type="hidden" name="userId" value={userId} />
             <input type="hidden" name="buyOrderId" value={buyOrderId} />
-            <input type="hidden" name="price" value={price} />
+            <input type="hidden" name="amount" value={price} />
+            <input type="hidden" name="priceExchange" value={priceExchange} />
+            <input type="hidden" name="valueExchange" value={value} />
+            <input type="hidden" name="dateValueExchange" value={dateValue} />
 
             {/* Reference Number Input */}
             <div className="space-y-2">
@@ -181,6 +192,18 @@ export default function PaymentConfirmationForm({
           </Button>
         </CardFooter>
       </Card>
+      <div className="text-sm mt-4 text-gray-200">
+        <div className="space-x-2 text-center ">
+          <span>Valor de tasa de cambio</span>
+          <span className="font-bold text-gray-700">
+            {Intl.NumberFormat("es-VE").format(Number(value))}
+          </span>
+        </div>
+        <div className="space-x-2 text-center">
+          <span>según Banco Central de Venezuela el</span>
+          <span className="font-bold text-gray-700">{dateValue}</span>
+        </div>
+      </div>
     </div>
   );
 }
