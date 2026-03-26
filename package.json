@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@astrojs/preact": "^4.1.0",
-    "@astrojs/vercel": "8.2.3",
+    "@astrojs/vercel": "10.0.2",
     "@clerk/astro": "^2.9.0",
     "@clerk/localizations": "^3.16.4",
     "@fontsource/rajdhani": "^5.2.6",
@@ -22,7 +22,7 @@
     "@radix-ui/react-scroll-area": "^1.2.8",
     "@radix-ui/react-slot": "^1.2.2",
     "@tailwindcss/vite": "^4.1.6",
-    "astro": "5.15.9",
+    "astro": "5.18.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "formik": "^2.4.6",
